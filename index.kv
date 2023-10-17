@@ -14,7 +14,7 @@
 
     pos_hint:{'center_x':.5, 'center_y':.5}
 
-<ApprovalCard@BoxLayout>:
+<ApprovalCard>:
     spacing:10
     pos_hint:{'center_x':.5}
     size_hint:None, None
@@ -28,9 +28,8 @@
             size:self.size
             pos:self.pos
     Label:
-        text:'username'
+        text:root.username
         size_hint:None,None
-#        size:self.texture_size
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
         canvas.before:
@@ -42,7 +41,7 @@
         pos_hint:{'center_y':.5}
 
     Label:
-        text:'product'
+        text:root.product
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -54,7 +53,7 @@
                 pos:self.pos
         pos_hint:{'center_y':.5}
     Label:
-        text:'price'
+        text:root.price
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -84,27 +83,19 @@
             orientation:'vertical'
             MyButton:
                 text:'add product'
+                on_release:app.root.current = 'add_product_page'
             MyButton:
                 text:'purchase history'
+                on_release:app.root.current = 'history_index_page'
             MyButton:
                 text:'Generate Bill'
+                on_release:app.root.current = 'bill_page'
         Widget:
             size_hint_y:.1
         ScrollView:
             BoxLayout:
+                id:approval_card_holder
                 size_hint_y:None
                 height:self.minimum_height
                 spacing:10
                 orientation:'vertical'
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:
-                ApprovalCard:

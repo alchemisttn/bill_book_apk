@@ -6,9 +6,11 @@
         spacing:10
         height:self.minimum_height
         MDTextField:
+            id:product
             hint_text:'product'
             halign:'center'
         MDTextField:
+            id:description
             hint_text:'description'
             multiline:True
             halign:'center'
@@ -23,6 +25,7 @@
                 size_hint:None,None
                 icon:'currency-rupee'
             MDTextField:
+                id:price
                 pos_hint:{'center_x':.5}
                 size_hint:None,None
                 mode:'rectangle'
@@ -35,6 +38,6 @@
         icon:'arrow-right'
         pos_hint:{'right':.9, 'top':.1}
         padding:15
-        on_release:app.root.current='history_index_page'
+        on_release:root.check_out()
 
 

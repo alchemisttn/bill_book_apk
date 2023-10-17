@@ -8,17 +8,25 @@
         size_hint_y:None
         pos_hint:{'top':.5}
         MDTextField:
+            id:username
             mode:'rectangle'
             hint_text:'username'
             pos_hint:{'center_x':.5}
             size_hint_x: .7
             halign:'center'
         MDTextField:
+            id:password
             mode:'rectangle'
             hint_text:'password'
             pos_hint:{'center_x':.5}
             size_hint_x: .7
             halign:'center'
             password:True
-
-
+    MDIconButton:
+        md_bg_color:[1,0,1,.5]
+        color:[0,0,0]
+        padding:10
+        icon:'arrow-right'
+        pos_hint:{'right':.9, 'top':.1}
+        padding:15
+        on_release:root.validator()
