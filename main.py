@@ -10,8 +10,8 @@ from login import Login
 class ScreenHandler(ScreenManager):
     def __init__(self):
         super().__init__()
-        # self.add_widget(Login(name='login_page'))
-        # self.add_widget(Index(name='index_page'))
+        self.add_widget(Login(name='login_page'))
+        self.add_widget(Index(name='index_page'))
         self.add_widget(AddProduct(name='add_product'))
         # self.current = 'login_page'
         # self.current = 'index_page'
