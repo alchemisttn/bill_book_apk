@@ -1,0 +1,24 @@
+<Login>:
+    Image:
+        source:'img/logo.png'
+        size_hint:1, .5
+        pos_hint:{'top':1}
+    BoxLayout:
+        orientation:'vertical'
+        size_hint_y:None
+        pos_hint:{'top':.5}
+        MDTextField:
+            mode:'rectangle'
+            hint_text:'username'
+            pos_hint:{'center_x':.5}
+            size_hint_x: .7
+            halign:'center'
+        MDTextField:
+            mode:'rectangle'
+            hint_text:'password'
+            pos_hint:{'center_x':.5}
+            size_hint_x: .7
+            halign:'center'
+            password:True
+
+
