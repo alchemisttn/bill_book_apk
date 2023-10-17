@@ -1,5 +1,5 @@
 from kivy.uix.screenmanager import Screen
 
 
-class HistoryIndex(Screen):
+class Bill(Screen):
     pass
