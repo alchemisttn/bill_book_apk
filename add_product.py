@@ -5,14 +5,14 @@ from kivy.uix.screenmanager import Screen
 class AddProduct(Screen):
     def check_out(self):
         base = db.reference('/').child('to_approve').child('date').child('current_user')
-        # get eh product number of rhree=
+        # get eh product number =
         # base.push({
         #     'prod-4'':
         #         {
         #             product:name
         #             price:1000
-        #             descktiption:'something'
+        #             description:'something'
         #             closed:false
-        #             approvals:{'rkali':false, 'alchemist'200, 'kartoz':.5}
+        #             approvals:{'raki':false, 'alchemist'200, 'kartoz':.5}
         #         }
         # })

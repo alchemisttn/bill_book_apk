@@ -18,18 +18,27 @@ class ScreenHandler(ScreenManager):
     def __init__(self):
         super().__init__()
         Thread(target=connect_server).run()
-        self.add_widget(Login(name='login_page'))
-        # self.current = 'login_page'
-        self.add_widget(Index(name='index_page'))
+        # self.add_widget(Login(name='login_page'))
+        # self.add_widget(Index(name='index_page'))
         self.add_widget(AddProduct(name='add_product_page'))
         self.add_widget(HistoryIndex(name='history_index_page'))
         self.add_widget(History(name='history_page'))
         self.add_widget(Bill(name='bill_page'))
-        # self.current = 'index_page'
-        # self.current = 'add_product_page'
-        self.current = 'history_index_page'
-        # self.current = 'history_page'
-        # self.current = 'bill_page'
+        try:
+            with open('user', 'r') as f:
+                if len(f.read()) == 0:
+                    self.add_widget(Login(name='login_page'))
+                    self.current = 'login_page'
+                else:
+                    self.add_widget(Index(name='index_page'))
+                    self.current = 'index_page'
+        except FileNotFoundError:
+            self.add_widget(Index(name='index_page'))
+            self.current = 'index_page'
+        self.add_widget(AddProduct(name='add_product_page'))
+        self.add_widget(HistoryIndex(name='history_index_page'))
+        self.add_widget(History(name='history_page'))
+        self.add_widget(Bill(name='bill_page'))
 
 
 class MyApp_Entrance(MDApp):
@@ -41,7 +50,15 @@ class MyApp_Entrance(MDApp):
         Builder.load_file('history_index.kv')
         Builder.load_file('history.kv')
         Builder.load_file('bill.kv')
-        return ScreenHandler()
+
+        sm = ScreenHandler()
+        # sm.add_widget(Login(name='login_page'))
+        # sm.add_widget(Index(name='index_page'))
+        # sm.add_widget(AddProduct(name='add_product_page'))
+        # sm.add_widget(HistoryIndex(name='history_index_page'))
+        # sm.add_widget(History(name='history_page'))
+        # sm.add_widget(Bill(name='bill_page'))
+        return sm
 
 
 def connect_server():
@@ -49,7 +66,6 @@ def connect_server():
     firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://ralkz-bill-book-default-rtdb.asia-southeast1.firebasedatabase.app'
     })
-    ref = db.reference('/')
 
 
 MyApp_Entrance().run()
