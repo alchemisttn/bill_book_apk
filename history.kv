@@ -1,4 +1,4 @@
-<HistoryLastSumCard@BoxLayout>:
+<HistoryLastSumCard>:
     spacing:15
     pos_hint:{'center_x':.5}
     size_hint:None, None
@@ -25,7 +25,7 @@
                 pos:self.pos
         pos_hint:{'center_y':.5}
     Label:
-        text:'Price'
+        text:root.price
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -38,7 +38,7 @@
         pos_hint:{'center_y':.5}
 
 
-<HistoryCard@BoxLayout>:
+<HistoryCard>:
     spacing:15
     pos_hint:{'center_x':.5}
     size_hint:None, None
@@ -53,7 +53,7 @@
             pos:self.pos
 
     Label:
-        text:'Date'
+        text:root.date
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -65,7 +65,7 @@
                 pos:self.pos
         pos_hint:{'center_y':.5}
     Label:
-        text:'username'
+        text:root.username
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -77,7 +77,7 @@
                 pos:self.pos
         pos_hint:{'center_y':.5}
     Label:
-        text:'product'
+        text:root.product
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -89,7 +89,7 @@
                 pos:self.pos
         pos_hint:{'center_y':.5}
     Label:
-        text:'price'
+        text:root.price
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -106,31 +106,17 @@
 <History>:
     ScrollView:
         BoxLayout:
+            padding:[0,10,0,0]
+            id:card_holder
             size_hint_y:None
             height:self.minimum_height
             spacing:10
             orientation:'vertical'
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryCard:
-            HistoryLastSumCard:
     MDIconButton:
         md_bg_color:[1,0,1,.5]
         color:[0,0,0]
         padding:10
-        icon:'arrow-right'
-        pos_hint:{'right':.9, 'top':.1}
+        icon:'arrow-left'
+        pos_hint:{'top':.1,'right':.15}
         padding:15
-        on_release:app.root.current='bill_page'
+        on_release:app.root.current=root.manager.previous()

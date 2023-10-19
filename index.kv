@@ -1,4 +1,4 @@
-<MyButton@MDFlatButton>:
+<MyButton>:
     canvas.before:
         Color:
             rgba:1,0,1,.3
@@ -66,8 +66,10 @@
         pos_hint:{'center_y':.5}
 
     MDRaisedButton:
-        text:'Approve'
+        text:root.button_text
         pos_hint:{'center_y':.5}
+        on_press:root.approve_data()
+
 
 
 <Index>:

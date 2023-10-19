@@ -1,22 +1,11 @@
 <HistoryIndex>:
     BoxLayout:
+        id:button_holder
         size_hint_y:None
         height:self.minimum_height
         spacing:20
         pos_hint:{'center_x':.5, 'center_y':.5}
         orientation:'vertical'
-        MyButton:
-            text:'All'
-            on_release:app.root.current='history_page'
-        MyButton:
-            text:'Raki'
-            on_release:app.root.current='history_page'
-        MyButton:
-            text:'Kartoz'
-            on_release:app.root.current='history_page'
-        MyButton:
-            text:'Alchemist'
-            on_release:app.root.current='history_page'
     MDIconButton:
         md_bg_color:[1,0,1,.5]
         color:[0,0,0]

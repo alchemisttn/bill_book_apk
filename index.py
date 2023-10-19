@@ -6,12 +6,22 @@ from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 
+from my_util import get_username
+from kivymd.uix.button import MDFlatButton
+
+
+class MyButton(MDFlatButton):
+    pass
+
 
 class Index(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Thread(target=self.fetch_data).run()
+        try:
+            Thread(target=self.fetch_data).run()
+        except AttributeError:
+            pass
 
     def fetch_data(self):
         root = db.reference('/').child('to-approve')
@@ -24,16 +34,29 @@ class Index(Screen):
                     # todo check if the current user is the one who has requested for approval and don't add as card as the below code.
                     # if user is not current_user and not product_data['closed']:
                     self.ids.approval_card_holder.add_widget(
-                        ApprovalCard(user, product_data['product'], product_data['price']))
+                        ApprovalCard(user, product_data['product'], product_data['price'], date, product_count)
+                    )
 
 
 class ApprovalCard(BoxLayout):
     username = StringProperty('')
     product = StringProperty('')
     price = StringProperty('')
+    button_text = StringProperty('')
 
-    def __init__(self, username, product, price):
+    def __init__(self, username, product, price, date, product_count):
         super().__init__()
+        self.ref = db.reference('/').child('to-approve').child(self.date).child(self.username).child(
+            self.product_count).child('approvals')
         self.username = username
         self.product = product
         self.price = str(price)
+        self.date = date
+        self.product_count = product_count
+        self.button_text = 'Approve' if self.ref.get(get_username()) else 'Approved'
+
+    def approve_data(self):
+        if self.button_text == 'Approved':
+            self.disabled = True
+            return
+        self.ref.set({get_username(): 'true'})
