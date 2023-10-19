@@ -9,15 +9,9 @@ class Login(Screen):
         local_password = self.ids.password.text
         db_root = db.reference('/').child(str(local_username)).child('personal').child('password')
         server_password = db_root.get()
-        print(server_password, '\n\n\n\n\n\n\n\n\n')
-
         if server_password == local_password:
             self.manager.current = 'index_page'
             with open('user', 'w') as f:
-                f.write('{"username":"' + str(local_username) + '","password":"' + str(local_password) + '"}')
-            with open('user', 'r') as f:
-                d = eval(f.read())
-                print(d['username'], d['password'])
-
+                f.write('{"username":"' + str(local_username) + '","password":"' + str(server_password) + '"}')
         else:
             print(server_password, local_password)

@@ -11,7 +11,10 @@ class Index(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Thread(target=self.fetch_data).run()
+        try:
+            Thread(target=self.fetch_data).run()
+        except AttributeError:
+            pass
 
     def fetch_data(self):
         root = db.reference('/').child('to-approve')
