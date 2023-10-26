@@ -2,7 +2,7 @@
     text:root.text
     padding:[0,0,0,15]
 
-<BillCard@BoxLayout>:
+<BillCard>:
     spacing:15
     pos_hint:{'center_x':.5}
     size_hint:None, None
@@ -17,7 +17,7 @@
             pos:self.pos
 
     Label:
-        text:'title'
+        text:root.user_name
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -32,7 +32,7 @@
         size_hint_x:None
         width:120
     Label:
-        text:'Price'
+        text:root.user_sum
         size_hint:None,None
         width:self.texture_size[0]+dp(10)
         height:self.texture_size[1]+dp(5)
@@ -56,7 +56,6 @@
             spacing:10
             orientation:'vertical'
             pos_hint:{'center_y':.5}
-            BillCard:
 
     MDIconButton:
         md_bg_color:[1,0,1,.5]
