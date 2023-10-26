@@ -19,25 +19,24 @@ class ScreenHandler(ScreenManager):
     def __init__(self):
         super().__init__()
         try:
+            self.add_widget(Index(name='index_page'))
             with open('user', 'r') as f:
                 if len(f.read()) == 0:
                     # if there is no data inside the local user auth file open login_page
                     self.add_widget(Login(name='login_page'))
                     self.current = 'login_page'
+                else:
+                    self.current = 'index_page'
         except FileNotFoundError:
             self.add_widget(Login(name='login_page'))
             self.current = 'login_page'
         except Exception as ee:
-            Logger.error(str(ee))
-        self.add_widget(Index(name='index_page'))
-        # self.current = 'index_page'
+            print(ee)
+            Logger.error(ee)
         self.add_widget(AddProduct(name='add_product_page'))
-        # self.current = 'add_product_page'
         self.add_widget(HistoryIndex(name='history_index_page'))
-        # self.current = 'history_index_page'
         self.add_widget(History(name='history_page'))
         self.add_widget(Bill(name='bill_page'))
-        self.current = 'bill_page'
 
 
 class MyApp_Entrance(MDApp):
@@ -46,7 +45,12 @@ class MyApp_Entrance(MDApp):
     def build(self):
         Thread(target=connect_server).run()
         self.theme_cls.theme_style = "Dark"
-        Builder.load_file('login.kv')  # todo check if user is already logged in and load
+        try:
+            with open('user', 'r') as f:
+                if len(f.read()) != 0:
+                    Builder.load_file('login.kv')
+        except FileNotFoundError:
+            Builder.load_file('login.kv')
         Builder.load_file('index.kv')
         Builder.load_file('add_product.kv')
         Builder.load_file('history_index.kv')
@@ -65,4 +69,5 @@ def connect_server():
 try:
     MyApp_Entrance().run()
 except Exception as e:
-    Logger.error(str(e))
+    print(e)
+    Logger.error(e)
