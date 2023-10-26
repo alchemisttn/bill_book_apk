@@ -3,6 +3,8 @@ from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
+from my_util import get_username
+
 
 class Bill(Screen):
     def __init__(self, **kwargs):
@@ -18,9 +20,7 @@ class Bill(Screen):
             for user, product_node in user_node.items():
                 for product_count, product_data in product_node.items():
                     if not any([user == get_username(), product_data['closed']]):
-                        self.ids.approval_card_holder.add_widget(
-                            ApprovalCard(user, product_data['product'], product_data['price'], date, product_count)
-                        )
+                        pass
 
     def on_enter(self, *args):
         self.full_data = db.reference('/').get()
@@ -31,10 +31,9 @@ class Bill(Screen):
     def calculate(self, data: list):
         pass
 
+    class HeadingLabel(Label):
+        text = StringProperty('')
 
-class HeadingLabel(Label):
-    text = StringProperty('')
-
-    def __init__(self, text, **kwargs):
-        super().__init__(**kwargs)
-        self.text = text
+        def __init__(self, text, **kwargs):
+            super().__init__(**kwargs)
+            self.text = text
