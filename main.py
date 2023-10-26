@@ -1,7 +1,8 @@
 from threading import Thread
-from firebase_admin import credentials, db
+from firebase_admin import credentials
 
 import firebase_admin
+from kivy import Logger
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -20,21 +21,23 @@ class ScreenHandler(ScreenManager):
         try:
             with open('user', 'r') as f:
                 if len(f.read()) == 0:
+                    # if there is no data inside the local user auth file open login_page
                     self.add_widget(Login(name='login_page'))
                     self.current = 'login_page'
-                else:
-                    self.add_widget(Index(name='index_page'))
-                    self.current = 'index_page'
         except FileNotFoundError:
             self.add_widget(Login(name='login_page'))
             self.current = 'login_page'
+        except Exception as ee:
+            Logger.error(str(ee))
         self.add_widget(Index(name='index_page'))
+        # self.current = 'index_page'
         self.add_widget(AddProduct(name='add_product_page'))
         # self.current = 'add_product_page'
         self.add_widget(HistoryIndex(name='history_index_page'))
         # self.current = 'history_index_page'
         self.add_widget(History(name='history_page'))
         self.add_widget(Bill(name='bill_page'))
+        self.current = 'bill_page'
 
 
 class MyApp_Entrance(MDApp):
@@ -59,4 +62,7 @@ def connect_server():
     })
 
 
-MyApp_Entrance().run()
+try:
+    MyApp_Entrance().run()
+except Exception as e:
+    Logger.error(str(e))

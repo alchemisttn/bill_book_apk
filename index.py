@@ -1,6 +1,5 @@
 # todo  the approval list ui is not fitted correctly it should be brought to a unique layout.
 
-from threading import Thread
 from firebase_admin import db
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -18,24 +17,30 @@ class Index(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        try:
-            Thread(target=self.fetch_data).run()
-        except AttributeError:
-            pass
-
-    def fetch_data(self):
         root = db.reference('/').child('to-approve')
-        a = root.get()
-        for date, user_node in a.items():
-            for user, product_node in user_node.items():
-                for product_count, product_data in product_node.items():
-                    # for key, value in product_data.items():
-                    #     print(key, value)
-                    # todo check if the current user is the one who has requested for approval and don't add as card as the below code.
-                    # if user is not current_user and not product_data['closed']:
-                    self.ids.approval_card_holder.add_widget(
-                        ApprovalCard(user, product_data['product'], product_data['price'], date, product_count)
-                    )
+        self.a = root.get()
+
+    def on_pre_enter(self, *args):
+        if self.a:
+            # info: if self.a contains data, then add them as cards to the screen
+            for date, user_node in self.a.items():
+                for user, product_node in user_node.items():
+                    for product_count, product_data in product_node.items():
+                        if not any([user == get_username(), product_data['closed']]):
+                            self.ids.approval_card_holder.add_widget(
+                                ApprovalCard(user, product_data['product'], product_data['price'], date, product_count)
+                            )
+
+    def on_enter(self, *args):
+        if self.a:
+            # info: if self.a contains data, then add them as cards to the screen
+            for date, user_node in self.a.items():
+                for user, product_node in user_node.items():
+                    for product_count, product_data in product_node.items():
+                        if not any([user == get_username(), product_data['closed']]):
+                            self.ids.approval_card_holder.add_widget(
+                                ApprovalCard(user, product_data['product'], product_data['price'], date, product_count)
+                            )
 
 
 class ApprovalCard(BoxLayout):
@@ -46,13 +51,13 @@ class ApprovalCard(BoxLayout):
 
     def __init__(self, username, product, price, date, product_count):
         super().__init__()
-        self.ref = db.reference('/').child('to-approve').child(self.date).child(self.username).child(
-            self.product_count).child('approvals')
         self.username = username
         self.product = product
         self.price = str(price)
         self.date = date
         self.product_count = product_count
+        self.ref = db.reference('/').child('to-approve').child(self.date).child(self.username).child(
+            self.product_count).child('approvals')
         self.button_text = 'Approve' if self.ref.get(get_username()) else 'Approved'
 
     def approve_data(self):

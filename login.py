@@ -13,5 +13,7 @@ class Login(Screen):
             self.manager.current = 'index_page'
             with open('user', 'w') as f:
                 f.write('{"username":"' + str(local_username) + '","password":"' + str(server_password) + '"}')
+            self.manager.current = 'index.kv'
         else:
-            print(server_password, local_password)
+            return
+

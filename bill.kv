@@ -1,3 +1,7 @@
+<HeadingLabel>:
+    text:root.text
+    padding:[0,0,0,15]
+
 <BillCard@BoxLayout>:
     spacing:15
     pos_hint:{'center_x':.5}
@@ -42,31 +46,23 @@
 
 
 <Bill>:
-    BoxLayout:
-        size_hint_y:None
-        height:self.minimum_height
-        spacing:10
-        orientation:'vertical'
+    ScrollView:
         pos_hint:{'center_y':.5}
-        BillCard:
-        BillCard
-        BillCard:
-        BillCard:
-        Widget:
+        BoxLayout:
+            id:bill_card_holder
+            padding:[0,'30dp',0,0]
             size_hint_y:None
-            height:dp(20)
-        Label:
-            text:'balances'
-            padding:[0,0,0,15]
-        BillCard:
-        BillCard:
-        BillCard:
+            height:self.minimum_height
+            spacing:10
+            orientation:'vertical'
+            pos_hint:{'center_y':.5}
+            BillCard:
 
     MDIconButton:
         md_bg_color:[1,0,1,.5]
         color:[0,0,0]
         padding:10
-        icon:'arrow-right'
-        pos_hint:{'right':.9, 'top':.1}
+        icon:'arrow-left'
+        pos_hint:{'right':.2, 'top':.1}
         padding:15
-        on_release:app.root.current='login_page'
+        on_release:app.root.current=app.root.previous()
