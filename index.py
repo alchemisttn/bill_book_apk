@@ -53,7 +53,7 @@ class ApprovalCard(BoxLayout):
         self.price = str(price)
         self.date = date
         self.product_count = product_count
-        self.button_text = 'Approve' if self.ref.get(get_username()) else 'Approved'
+        self.button_text = 'Approve' if self.ref.get(get_username()) else 'Approved_'
 
     def approve_data(self):
         if self.button_text == 'Approved':
