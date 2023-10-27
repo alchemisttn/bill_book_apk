@@ -66,6 +66,7 @@
         pos_hint:{'center_y':.5}
 
     MDRaisedButton:
+        disabled:root.is_approved
         text:root.button_text
         pos_hint:{'center_y':.5}
         on_press:root.approve_data()
