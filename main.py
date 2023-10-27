@@ -66,8 +66,4 @@ def connect_server():
     })
 
 
-try:
-    MyApp_Entrance().run()
-except Exception as e:
-    print(e)
-    Logger.error(e)
+MyApp_Entrance().run()
