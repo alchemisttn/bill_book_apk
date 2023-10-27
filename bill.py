@@ -1,5 +1,4 @@
 from firebase_admin import db
-from kivy import Logger
 from kivy.metrics import dp
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -35,26 +34,32 @@ class Bill(Screen):
         self.average = None
 
     def on_pre_enter(self, *args):
-        try:
-            self.full_data = db.reference('/').order_by_key().get()
-            self.fetch_and_add_data_to_screen()
-        except Exception:
-            # info: someone has bought nothing
-            self.ids.bill_card_holder.add_widget(BillCard(text='total', total=str(sum(self.sums.values()))))
+        self.ids.bill_card_holder.clear_widgets()
+        # try:
+        self.full_data = db.reference('/').order_by_key().get()
+        self.fetch_and_add_data_to_screen()
+        # except Exception as e:
+        #     Logger.error(e)
+        # info: someone has bought nothing
+        # self.ids.bill_card_holder.add_widget(BillCard(text='total', total=str(sum(self.sums.values()))))
 
         self.calculate()
 
     def fetch_and_add_data_to_screen(self):
         if self.full_data:
+            # print(self.full_data)
             self.ids.bill_card_holder.add_widget(HeadingLabel('prices'))
             for user, user_data in self.full_data.items():
-                if user == 'to-approve':
-                    break
+                # print(user)
+                if user in ['to-approve', 'user_count']:
+                    continue
                 self.sums[user] = 0
-                for date, product_data in user_data['products'].items():
-                    print(date, product_data)
-                    for item_index, item_details in product_data.items():
-                        self.sums[user] += int(item_details['price'])
+                try:
+                    for date, product_data in user_data['products'].items():
+                        for item_index, item_details in product_data.items():
+                            self.sums[user] += int(item_details['price'])
+                except KeyError:
+                    pass
                 self.ids.bill_card_holder.add_widget(BillCard(text=user, total=str(self.sums[user])))
             self.ids.bill_card_holder.add_widget(BillCard(text='total', total=str(sum(self.sums.values()))))
 

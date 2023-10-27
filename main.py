@@ -3,6 +3,7 @@ from firebase_admin import credentials
 
 import firebase_admin
 from kivy import Logger
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -32,7 +33,6 @@ class ScreenHandler(ScreenManager):
             self.current = 'login_page'
         except Exception as ee:
             print(ee)
-            Logger.error(ee)
         self.add_widget(AddProduct(name='add_product_page'))
         self.add_widget(HistoryIndex(name='history_index_page'))
         self.add_widget(History(name='history_page'))
@@ -41,6 +41,7 @@ class ScreenHandler(ScreenManager):
 
 class MyApp_Entrance(MDApp):
     history_index_on_behalf = ''
+    previous_scrn, stack_scrn = StringProperty('index_page'), []
 
     def build(self):
         Thread(target=connect_server).run()
@@ -57,6 +58,13 @@ class MyApp_Entrance(MDApp):
         Builder.load_file('history.kv')
         Builder.load_file('bill.kv')
         return ScreenHandler()
+
+    def scrn_stack(self, name):
+        # info: while leaving the screen, screen-name is added to the stack.
+        if name in self.stack_scrn:
+            self.stack_scrn.remove(self.previous_scrn)
+        self.stack_scrn.append(self.previous_scrn)
+        self.previous_scrn = self.stack_scrn.pop()
 
 
 def connect_server():

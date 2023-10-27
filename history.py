@@ -34,7 +34,8 @@ class History(Screen):
         self.root = db.reference('/').child('to-approve')
         self.data = self.root.get()
 
-    def on_enter(self, *args):
+    def on_pre_enter(self, *args):
+        self.ids.card_holder.clear_widgets()
         total = 0
         for date, users in self.data.items():
             for user, prod_index_data in users.items():
