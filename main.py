@@ -1,8 +1,12 @@
-from firebase_admin import credentials
+from firebase_admin import credentials, db
 
 import firebase_admin
+from google.auth.exceptions import TransportError
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.properties import StringProperty
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import ScreenManager, ScreenManagerException, Screen
 from kivymd.app import MDApp
 from kivy.lang import Builder
 
@@ -16,6 +20,19 @@ from login import Login
 
 
 class ScreenHandler(ScreenManager):
+
+    def get_screen(self, name):
+        try:
+            return super().get_screen(name)
+        except ScreenManagerException:
+            self.clear_widgets()
+            self.add_widget(AddProduct(name='add_product_page'))
+            self.add_widget(HistoryIndex(name='history_index_page'))
+            self.add_widget(History(name='history_page'))
+            self.current = 'history_index_page'
+            self.add_widget(Bill(name='bill_page'))
+            self.current = name
+
     def __init__(self):
         super().__init__()
         try:
@@ -32,23 +49,43 @@ class ScreenHandler(ScreenManager):
             self.current = 'login_page'
         except Exception as ee:
             print(ee)
+        self.current = 'index_page'
         self.add_widget(AddProduct(name='add_product_page'))
         self.add_widget(HistoryIndex(name='history_index_page'))
         self.add_widget(History(name='history_page'))
+        # self.current = 'history_index_page'
         self.add_widget(Bill(name='bill_page'))
+        Window.bind(on_keyboard=self.on_back_click)
+
+    def on_back_click(self, window, key, *args):
+        if key == 27:
+            self.current = App.get_running_app().previous_scrn
+            return True
+
+
+class NoNetwork(Screen):
+    pass
 
 
 class MyApp_Entrance(MDApp):
     history_index_on_behalf = ''
     previous_scrn, stack_scrn = StringProperty('index_page'), []
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scrn_manager = None
+        self.broad_cast = None
+
     def build(self):
-        try:
-            # Thread(target=connect_server).run()
-            connect_server()
-        except Exception as e:
-            print(e)
         self.theme_cls.theme_style = "Dark"
+        connect_server()
+        try:
+            # info: check if data is on, else show no_internet page and exit
+            db.reference('/').child('user_count').get()
+        except TransportError:
+            Builder.load_file('no_network.kv')
+            Clock.schedule_once(lambda x: exit(), 2)
+            return NoNetwork()
         try:
             with open('user', 'r') as f:
                 if len(f.read()) != 0:
@@ -60,7 +97,40 @@ class MyApp_Entrance(MDApp):
         Builder.load_file('history_index.kv')
         Builder.load_file('history.kv')
         Builder.load_file('bill.kv')
-        return ScreenHandler()
+        try:
+            from pythonforandroid.recipes.android.src.android.broadcast import BroadcastReceiver
+            self.broad_cast = BroadcastReceiver(
+                self.on_broadcast, actions=['android.net.conn.CONNECTIVITY_CHANGE'])
+            self.broad_cast.start()
+        except ModuleNotFoundError as e:
+            print(e)
+
+        try:
+            self.scrn_manager = ScreenHandler()
+            return self.scrn_manager
+        except TransportError:
+            Builder.load_file('no_network.kv')
+            Clock.schedule_once(lambda x: exit(), 2)
+            return NoNetwork()
+
+    def on_pause(self):
+        try:
+            self.broad_cast.stop()
+        except ModuleNotFoundError:
+            pass
+
+    def on_resume(self):
+        try:
+            self.broad_cast.start()
+        except ModuleNotFoundError:
+            pass
+
+    def on_broadcast(self, *args):
+        exit()
+        # Builder.load_file('no_network.kv')
+        # self.scrn_manager.add_widget(NoNetwork(name='no_network'))
+        # self.scrn_manager.current = 'no_network'
+        # Clock.schedule_once(lambda x: exit(), 2)
 
     def scrn_stack(self, name):
         # info: while leaving the screen, screen-name is added to the stack.

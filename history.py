@@ -1,6 +1,9 @@
 from firebase_admin import db
+from kivy.animation import Animation
+from kivy.metrics import dp
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
 
@@ -24,6 +27,10 @@ class HistoryCard(BoxLayout):
         self.price = price
         self.product = product
         self.username = username
+
+    def on_touch_up(self, touch):
+        Animation(height=dp(10))
+        self.add_widget(Label(text='hi'))
 
 
 class History(Screen):
