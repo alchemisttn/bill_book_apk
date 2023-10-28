@@ -1,8 +1,6 @@
-from threading import Thread
 from firebase_admin import credentials
 
 import firebase_admin
-from kivy import Logger
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.app import MDApp
@@ -13,6 +11,7 @@ from bill import Bill
 from history import History
 from history_index import HistoryIndex
 from index import Index
+from key_json import data
 from login import Login
 
 
@@ -44,7 +43,11 @@ class MyApp_Entrance(MDApp):
     previous_scrn, stack_scrn = StringProperty('index_page'), []
 
     def build(self):
-        Thread(target=connect_server).run()
+        try:
+            # Thread(target=connect_server).run()
+            connect_server()
+        except Exception as e:
+            print(e)
         self.theme_cls.theme_style = "Dark"
         try:
             with open('user', 'r') as f:
@@ -68,7 +71,7 @@ class MyApp_Entrance(MDApp):
 
 
 def connect_server():
-    cred = credentials.Certificate("key.json")
+    cred = credentials.Certificate(data)
     firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://ralkz-bill-book-default-rtdb.asia-southeast1.firebasedatabase.app'
     })
