@@ -97,13 +97,6 @@ class MyApp_Entrance(MDApp):
         Builder.load_file('history_index.kv')
         Builder.load_file('history.kv')
         Builder.load_file('bill.kv')
-        try:
-            from pythonforandroid.recipes.android.src.android.broadcast import BroadcastReceiver
-            self.broad_cast = BroadcastReceiver(
-                self.on_broadcast, actions=['android.net.conn.CONNECTIVITY_CHANGE'])
-            self.broad_cast.start()
-        except ModuleNotFoundError as e:
-            print(e)
 
         try:
             self.scrn_manager = ScreenHandler()
@@ -112,25 +105,6 @@ class MyApp_Entrance(MDApp):
             Builder.load_file('no_network.kv')
             Clock.schedule_once(lambda x: exit(), 2)
             return NoNetwork()
-
-    def on_pause(self):
-        try:
-            self.broad_cast.stop()
-        except ModuleNotFoundError:
-            pass
-
-    def on_resume(self):
-        try:
-            self.broad_cast.start()
-        except ModuleNotFoundError:
-            pass
-
-    def on_broadcast(self, *args):
-        exit()
-        # Builder.load_file('no_network.kv')
-        # self.scrn_manager.add_widget(NoNetwork(name='no_network'))
-        # self.scrn_manager.current = 'no_network'
-        # Clock.schedule_once(lambda x: exit(), 2)
 
     def scrn_stack(self, name):
         # info: while leaving the screen, screen-name is added to the stack.
