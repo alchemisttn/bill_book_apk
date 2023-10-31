@@ -44,18 +44,21 @@ class History(Screen):
     def on_pre_enter(self, *args):
         self.ids.card_holder.clear_widgets()
         total = 0
-        for date, users in self.data.items():
-            for user, prod_index_data in users.items():
-                for prod_index in prod_index_data.values():
-                    if self.who_from_history_index == 'All':
-                        self.ids.card_holder.add_widget(
-                            HistoryCard(date=date, username=user, product=prod_index['product'],
-                                        price=prod_index['price']))
-                        total += int(prod_index['price'])
-                    elif self.who_from_history_index == user:
-                        self.ids.card_holder.add_widget(
-                            HistoryCard(date=date, username=user, product=prod_index['product'],
-                                        price=prod_index['price']))
-                        total += int(prod_index['price'])
+        try:
+            for date, users in self.data.items():
+                for user, prod_index_data in users.items():
+                    for prod_index in prod_index_data.values():
+                        if self.who_from_history_index == 'All':
+                            self.ids.card_holder.add_widget(
+                                HistoryCard(date=date, username=user, product=prod_index['product'],
+                                            price=prod_index['price']))
+                            total += int(prod_index['price'])
+                        elif self.who_from_history_index == user:
+                            self.ids.card_holder.add_widget(
+                                HistoryCard(date=date, username=user, product=prod_index['product'],
+                                            price=prod_index['price']))
+                            total += int(prod_index['price'])
+        except AttributeError:
+            pass
 
         self.ids.card_holder.add_widget(HistoryLastSumCard(price=str(total)))

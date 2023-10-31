@@ -32,9 +32,10 @@ class Index(Screen):
                         card_data = {'user': user, 'product': product_data['product'],
                                      'price': product_data['price'], 'date': date, 'product_count': product_count,
                                      'closed': product_data['closed']}
-                        if len(card_data) != 0 and not card_data['closed'] and user != get_username():
-                            # info: the current user's request-data and closed purchase aren't appended and shown
-                            self.card_data_holder.append(card_data)
+                        if get_username() is not None:
+                            if len(card_data) != 0 and not card_data['closed'] and user != get_username():
+                                # info: the current user's request-data and closed purchase aren't appended and shown
+                                self.card_data_holder.append(card_data)
         for data in self.card_data_holder:
             self.ids.approval_card_holder.add_widget(
                 ApprovalCard(data['user'], str(data['product']), data['price'], data['date'], data['product_count'])
