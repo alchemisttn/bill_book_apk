@@ -6,7 +6,7 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.properties import StringProperty
-from kivy.uix.screenmanager import ScreenManager, ScreenManagerException, Screen
+from kivy.uix.screenmanager import ScreenManager, ScreenManagerException, Screen, FadeTransition, NoTransition
 from kivymd.app import MDApp
 from kivy.lang import Builder
 
@@ -26,6 +26,7 @@ class ScreenHandler(ScreenManager):
             return super().get_screen(name)
         except ScreenManagerException:
             self.clear_widgets()
+            self.add_widget(Index(name='index_page'))
             self.add_widget(AddProduct(name='add_product_page'))
             self.add_widget(HistoryIndex(name='history_index_page'))
             self.add_widget(History(name='history_page'))
@@ -35,25 +36,21 @@ class ScreenHandler(ScreenManager):
 
     def __init__(self):
         super().__init__()
+        self.transition.direction = 'up'
+        self.transition.duration = 0.0
+        # self.transition = NoTransition()
+        self.add_widget(Index(name='index_page'))
         try:
-            self.add_widget(Index(name='index_page'))
-            with open('user', 'r') as f:
-                if len(f.read()) == 0:
-                    # if there is no data inside the local user auth file open login_page
-                    self.add_widget(Login(name='login_page'))
-                    self.current = 'login_page'
-                else:
-                    self.current = 'index_page'
+            open('user', 'r')
         except FileNotFoundError:
             self.add_widget(Login(name='login_page'))
             self.current = 'login_page'
-        except Exception as ee:
-            print(ee)
-        self.current = 'index_page'
+            return
+        else:
+            self.current = 'index_page'
         self.add_widget(AddProduct(name='add_product_page'))
         self.add_widget(HistoryIndex(name='history_index_page'))
         self.add_widget(History(name='history_page'))
-        # self.current = 'history_index_page'
         self.add_widget(Bill(name='bill_page'))
         Window.bind(on_keyboard=self.on_back_click)
 

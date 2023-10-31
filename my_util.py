@@ -2,9 +2,12 @@ from datetime import datetime
 
 
 def get_username():
-    with open('user', 'r') as f:
-        d = eval(f.read())
-        return d['username']
+    try:
+        with open('user', 'r') as f:
+            d = eval(f.read())
+            return d['username']
+    except FileNotFoundError:
+        return None
 
 
 def get_date():
