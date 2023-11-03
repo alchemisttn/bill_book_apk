@@ -6,7 +6,7 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.properties import StringProperty
-from kivy.uix.screenmanager import ScreenManager, ScreenManagerException, Screen, FadeTransition, NoTransition
+from kivy.uix.screenmanager import ScreenManager, ScreenManagerException, Screen
 from kivymd.app import MDApp
 from kivy.lang import Builder
 
